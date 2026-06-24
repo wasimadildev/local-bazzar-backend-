@@ -14,9 +14,17 @@ const profileDir = path.join(uploadRoot, 'profiles');
 const allowedMimeTypes = new Set(['image/jpeg', 'image/jpg', 'image/png', 'image/webp']);
 
 async function ensureUploadDirs() {
-  await fs.mkdir(tempDir, { recursive: true });
-  await fs.mkdir(listingDir, { recursive: true });
-  await fs.mkdir(profileDir, { recursive: true });
+  try {
+    await fs.mkdir(tempDir, { recursive: true });
+    await fs.mkdir(listingDir, { recursive: true });
+    await fs.mkdir(profileDir, { recursive: true });
+  } catch (error) {
+    // On serverless platforms like Vercel, we can't create directories.
+    // This is OK because we use Cloudinary for all uploads in production.
+    if (process.env.NODE_ENV !== 'production') {
+      throw error;
+    }
+  }
 }
 
 function parseCloudinaryUrl() {
@@ -75,19 +83,23 @@ function uploadBufferToCloudinary(buffer, publicId) {
   });
 }
 
-const storage = multer.diskStorage({
-  destination: async (_req, _file, cb) => {
-    try {
-      await ensureUploadDirs();
-      cb(null, tempDir);
-    } catch (error) {
-      cb(error);
-    }
-  },
-  filename: (_req, file, cb) => {
-    cb(null, `${randomUUID()}${path.extname(file.originalname).toLowerCase()}`);
-  }
-});
+const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+
+const storage = isServerless 
+  ? multer.memoryStorage()
+  : multer.diskStorage({
+      destination: async (_req, _file, cb) => {
+        try {
+          await ensureUploadDirs();
+          cb(null, tempDir);
+        } catch (error) {
+          cb(error);
+        }
+      },
+      filename: (_req, file, cb) => {
+        cb(null, `${randomUUID()}${path.extname(file.originalname).toLowerCase()}`);
+      }
+    });
 
 const uploadListingImages = multer({
   storage,
@@ -120,10 +132,13 @@ const uploadProfileImage = multer({
 }).single('photo');
 
 async function processProfilePhoto(file, baseUrl) {
-  await ensureUploadDirs();
+  if (!isServerless) {
+    await ensureUploadDirs();
+  }
 
   const id = randomUUID();
-  const imageBuffer = await sharp(file.path)
+  const sourceBuffer = file.buffer || await fs.readFile(file.path);
+  const imageBuffer = await sharp(sourceBuffer)
     .rotate()
     .resize({ width: 600, height: 600, fit: 'cover' })
     .webp({ quality: 80 })
@@ -131,31 +146,41 @@ async function processProfilePhoto(file, baseUrl) {
 
   if (cloudinaryConfigured()) {
     const image = await uploadBufferToCloudinary(imageBuffer, `profiles/${id}`);
-    await fs.unlink(file.path).catch(() => {});
+    if (file.path) {
+      await fs.unlink(file.path).catch(() => {});
+    }
     return image.secure_url;
   }
 
   const fileName = `${id}.webp`;
   const outputPath = path.join(profileDir, fileName);
-  await fs.writeFile(outputPath, imageBuffer);
-  await fs.unlink(file.path).catch(() => {});
+  await fs.writeFile(outputPath, imageBuffer).catch(() => {
+    // On serverless, we can't write to disk, but Cloudinary should have been used above
+    throw new Error('Image upload failed: Cloudinary not configured for serverless platform');
+  });
+  if (file.path) {
+    await fs.unlink(file.path).catch(() => {});
+  }
   return `${baseUrl}/uploads/profiles/${fileName}`;
 }
 
 async function processListingImages(files, baseUrl) {
-  await ensureUploadDirs();
+  if (!isServerless) {
+    await ensureUploadDirs();
+  }
 
   const images = [];
 
   for (const file of files || []) {
     const id = randomUUID();
-    const imageBuffer = await sharp(file.path)
+    const sourceBuffer = file.buffer || await fs.readFile(file.path);
+    const imageBuffer = await sharp(sourceBuffer)
       .rotate()
       .resize({ width: 1400, height: 1400, fit: 'inside', withoutEnlargement: true })
       .webp({ quality: 82 })
       .toBuffer();
 
-    const thumbBuffer = await sharp(file.path)
+    const thumbBuffer = await sharp(sourceBuffer)
       .rotate()
       .resize(420, 320, { fit: 'cover' })
       .webp({ quality: 76 })
@@ -167,7 +192,9 @@ async function processListingImages(files, baseUrl) {
         uploadBufferToCloudinary(thumbBuffer, `${id}-thumb`)
       ]);
 
-      await fs.unlink(file.path).catch(() => {});
+      if (file.path) {
+        await fs.unlink(file.path).catch(() => {});
+      }
 
       images.push({
         id,
@@ -180,6 +207,10 @@ async function processListingImages(files, baseUrl) {
       continue;
     }
 
+    if (isServerless) {
+      throw new Error('Image upload failed: Cloudinary not configured for serverless platform');
+    }
+
     const fileName = `${id}.webp`;
     const thumbName = `${id}-thumb.webp`;
     const outputPath = path.join(listingDir, fileName);
@@ -188,7 +219,9 @@ async function processListingImages(files, baseUrl) {
     await fs.writeFile(outputPath, imageBuffer);
     await fs.writeFile(thumbPath, thumbBuffer);
 
-    await fs.unlink(file.path).catch(() => {});
+    if (file.path) {
+      await fs.unlink(file.path).catch(() => {});
+    }
 
     images.push({
       id,
