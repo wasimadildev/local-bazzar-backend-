@@ -118,8 +118,8 @@ async function updateProfile(userId, { name, city, email, profilePhotoUrl }) {
 
   const updateData = {
     name: name ?? currentUser.name,
-    email: email ?? currentUser.email || '',
-    city: city ?? currentUser.city || ''
+    email: email ?? currentUser.email ?? '',
+    city: city ?? currentUser.city ?? ''
   };
 
   if (profilePhotoUrl !== undefined) {
