@@ -1,0 +1,137 @@
+{
+  "users": [
+    {
+      "id": "77335351-d72e-4ff5-999d-d28d4c3c48f4",
+      "name": "Waseem",
+      "phone": "03056609787",
+      "passwordHash": "$2a$12$XMQGXJAdpmesQ6NC4icKv.5WpM5EEU.IB0hMH00B2iU/Nd2J8.uPi",
+      "createdAt": "2026-06-23T03:02:56.178Z"
+    },
+    {
+      "id": "484731a7-9368-48b8-910c-6992e82ddb96",
+      "name": "Test User",
+      "phone": "555193064",
+      "passwordHash": "$2a$12$D6u66jZP7EiMYLbu2ELqgOxOiybVaApkMATV1rDjhSMtAOezKhZW6",
+      "city": "",
+      "savedListingIds": [],
+      "createdAt": "2026-06-23T08:59:05.626Z"
+    },
+    {
+      "id": "62e3ccab-9dea-45f9-8479-f8a6bcfbe4d0",
+      "name": "Seller Test",
+      "phone": "971501519841",
+      "passwordHash": "$2a$12$aEeQkOLVxmKcaBCjQVyDUeRVfLoVDt391b3.sEhOW.9KKsWGFxo8y",
+      "city": "",
+      "savedListingIds": [],
+      "createdAt": "2026-06-23T09:19:31.377Z"
+    },
+    {
+      "id": "148bbedd-73e7-4f92-95e6-7d4aba54e169",
+      "name": "Buyer Test",
+      "phone": "971552032747",
+      "passwordHash": "$2a$12$qfcVerQCpL61hnZaqoBciOCFdaDeVWonj.9rZR4X7k9Z77BQwoIsy",
+      "city": "",
+      "savedListingIds": [],
+      "createdAt": "2026-06-23T09:19:31.913Z"
+    },
+    {
+      "id": "3b842cf1-41e0-4092-8925-5acb9a797b44",
+      "name": "Seller Test",
+      "phone": "971507467426",
+      "passwordHash": "$2a$12$KIskSxYIzw1ClyQPY2ahwuFm79XII8O4GoljdxhyT6FzaGIZB6i.O",
+      "city": "",
+      "savedListingIds": [],
+      "createdAt": "2026-06-23T09:20:02.676Z"
+    },
+    {
+      "id": "9f1f7f84-0883-4c4b-8811-2c68de1155ac",
+      "name": "Buyer Updated",
+      "phone": "971552422441",
+      "passwordHash": "$2a$12$mNqbV.zxW6WFcP0pfynWF.A6wcYDN/smS.A2NVIrZWGLKRfSv49Ai",
+      "city": "Dubai",
+      "savedListingIds": [
+        "27da9fd5-ef51-45f0-8cdd-a3d601c537c7"
+      ],
+      "createdAt": "2026-06-23T09:20:03.169Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": "vehicles",
+      "name": "Vehicles"
+    },
+    {
+      "id": "mobiles",
+      "name": "Mobiles"
+    },
+    {
+      "id": "property",
+      "name": "Property"
+    },
+    {
+      "id": "electronics",
+      "name": "Electronics"
+    },
+    {
+      "id": "furniture",
+      "name": "Furniture"
+    },
+    {
+      "id": "jobs",
+      "name": "Jobs"
+    },
+    {
+      "id": "services",
+      "name": "Services"
+    }
+  ],
+  "listings": [
+    {
+      "id": "27da9fd5-ef51-45f0-8cdd-a3d601c537c7",
+      "title": "Test Sofa",
+      "description": "Comfortable test sofa for local marketplace testing",
+      "price": 450,
+      "categoryId": "furniture",
+      "categoryName": "Furniture",
+      "city": "Dubai",
+      "condition": "used",
+      "status": "active",
+      "images": [],
+      "seller": {
+        "id": "3b842cf1-41e0-4092-8925-5acb9a797b44",
+        "name": "Seller Test",
+        "phone": "971507467426"
+      },
+      "createdAt": "2026-06-23T09:20:03.498Z",
+      "updatedAt": "2026-06-23T09:20:03.498Z"
+    }
+  ],
+  "conversations": [
+    {
+      "id": "e588dd20-c8eb-4410-8694-6f29149a0fc9",
+      "listingId": "27da9fd5-ef51-45f0-8cdd-a3d601c537c7",
+      "listingTitle": "Test Sofa",
+      "listingImageUrl": "",
+      "buyer": {
+        "id": "9f1f7f84-0883-4c4b-8811-2c68de1155ac",
+        "name": "Buyer Updated",
+        "phone": "971552422441"
+      },
+      "seller": {
+        "id": "3b842cf1-41e0-4092-8925-5acb9a797b44",
+        "name": "Seller Test",
+        "phone": "971507467426"
+      },
+      "messages": [
+        {
+          "id": "b2a9c298-ffd3-4262-9302-77e9ebf4c4db",
+          "senderId": "9f1f7f84-0883-4c4b-8811-2c68de1155ac",
+          "body": "Hi, is this still available?",
+          "createdAt": "2026-06-23T09:20:03.584Z"
+        }
+      ],
+      "createdAt": "2026-06-23T09:20:03.574Z",
+      "updatedAt": "2026-06-23T09:20:03.586Z"
+    }
+  ]
+}
