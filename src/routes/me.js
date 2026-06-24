@@ -8,11 +8,12 @@ const {
   setListingSaved,
   updateProfile
 } = require('../repositories/marketplace');
+const { uploadProfileImage, processProfilePhoto } = require('../middleware/upload');
 
 const router = express.Router();
 
 const profileSchema = z.object({
-  name: z.string().trim().min(2).max(80),
+  name: z.string().trim().min(2).max(80).optional(),
   city: z.string().trim().max(80).optional().default('')
 });
 
@@ -28,15 +29,32 @@ router.get('/profile', async (req, res, next) => {
   }
 });
 
-router.patch('/profile', async (req, res, next) => {
-  try {
-    const body = profileSchema.parse(req.body);
-    const user = await updateProfile(req.user.sub, body);
-    if (!user) return res.status(404).json({ message: 'User not found.' });
-    return res.json({ user });
-  } catch (error) {
-    return next(error);
-  }
+router.patch('/profile', (req, res, next) => {
+  uploadProfileImage(req, res, async (uploadError) => {
+    if (uploadError) {
+      return res.status(400).json({ message: uploadError.message });
+    }
+
+    try {
+      const body = profileSchema.parse(req.body);
+      const baseUrl = process.env.PUBLIC_BASE_URL || `${req.protocol}://${req.get('host')}`;
+      let profilePhotoUrl;
+      if (req.file) {
+        profilePhotoUrl = await processProfilePhoto(req.file, baseUrl);
+      }
+
+      const user = await updateProfile(req.user.sub, {
+        name: body.name,
+        city: body.city,
+        profilePhotoUrl
+      });
+
+      if (!user) return res.status(404).json({ message: 'User not found.' });
+      return res.json({ user });
+    } catch (error) {
+      return next(error);
+    }
+  });
 });
 
 router.get('/listings', async (req, res, next) => {

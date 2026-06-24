@@ -7,7 +7,8 @@ const {
   findListingById,
   findUserById,
   listCategories,
-  listListings
+  listListings,
+  changeListingStatus
 } = require('../repositories/marketplace');
 
 const router = express.Router();
@@ -34,7 +35,22 @@ router.get('/', async (req, res, next) => {
     const query = String(req.query.q || '');
     const categoryId = String(req.query.categoryId || '');
     const city = String(req.query.city || '');
-    const listings = await listListings({ query, categoryId, city });
+    const condition = String(req.query.condition || '');
+    const status = String(req.query.status || 'available');
+    const minPrice = req.query.minPrice != null ? Number(req.query.minPrice) : undefined;
+    const maxPrice = req.query.maxPrice != null ? Number(req.query.maxPrice) : undefined;
+    const sort = String(req.query.sort || 'recent');
+
+    const listings = await listListings({
+      query,
+      categoryId,
+      city,
+      condition,
+      status,
+      minPrice,
+      maxPrice,
+      sort
+    });
 
     return res.json({ listings });
   } catch (error) {
@@ -83,7 +99,7 @@ router.post('/', requireAuth, (req, res, next) => {
         categoryName: category.name,
         city: body.city,
         condition: body.condition,
-        status: 'active',
+        status: 'available',
         images,
         seller: {
           id: req.user.sub,
@@ -97,6 +113,21 @@ router.post('/', requireAuth, (req, res, next) => {
       return next(error);
     }
   });
+});
+
+router.patch('/:id/status', requireAuth, async (req, res, next) => {
+  try {
+    const status = String(req.body.status || '').trim();
+    if (!['available', 'reserved', 'sold'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status.' });
+    }
+
+    const listing = await changeListingStatus(req.params.id, req.user.sub, status);
+    if (!listing) return res.status(404).json({ message: 'Listing not found or permission denied.' });
+    return res.json({ listing });
+  } catch (error) {
+    return next(error);
+  }
 });
 
 module.exports = router;

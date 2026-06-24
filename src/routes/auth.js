@@ -26,7 +26,13 @@ router.post('/register', async (req, res, next) => {
 
     return res.status(201).json({
       token: signToken(user),
-      user: { id: user.id, name: user.name, phone: user.phone }
+      user: {
+        id: user.id,
+        name: user.name,
+        phone: user.phone,
+        city: user.city || '',
+        profilePhotoUrl: user.profilePhotoUrl || ''
+      }
     });
   } catch (error) {
     return next(error);
@@ -44,7 +50,13 @@ router.post('/login', async (req, res, next) => {
 
     return res.json({
       token: signToken(user),
-      user: { id: user.id, name: user.name, phone: user.phone }
+      user: {
+        id: user.id,
+        name: user.name,
+        phone: user.phone,
+        city: user.city || '',
+        profilePhotoUrl: user.profilePhotoUrl || ''
+      }
     });
   } catch (error) {
     return next(error);

@@ -12,6 +12,7 @@ const authRoutes = require('./routes/auth');
 const conversationRoutes = require('./routes/conversations');
 const listingRoutes = require('./routes/listings');
 const meRoutes = require('./routes/me');
+const userRoutes = require('./routes/users');
 
 const app = express();
 const port = Number(process.env.MARKETPLACE_API_PORT || process.env.PORT || 4000);
@@ -50,6 +51,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/conversations', conversationRoutes);
 app.use('/api/listings', listingRoutes);
 app.use('/api/me', meRoutes);
+app.use('/api/users', userRoutes);
 
 app.use((error, _req, res, _next) => {
   if (error.name === 'ZodError') {

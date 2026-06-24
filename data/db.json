@@ -53,6 +53,48 @@
         "27da9fd5-ef51-45f0-8cdd-a3d601c537c7"
       ],
       "createdAt": "2026-06-23T09:20:03.169Z"
+    },
+    {
+      "id": "8a4e158b-0670-407c-a268-52f2ce6fa8e3",
+      "name": "Test User",
+      "phone": "1234567890",
+      "passwordHash": "$2a$12$wVnlV3m/Tj7ol/NECNmDr.AElxJXzFOxRWiFkeLBdoNgr4BG0sEHS",
+      "createdAt": "2026-06-24T06:59:33.232Z"
+    },
+    {
+      "id": "7398c6e0-edd7-4128-b3b0-284ff6476cf0",
+      "name": "Test User",
+      "phone": "9999999999",
+      "passwordHash": "$2a$12$4UkgBC/yDcsUcKYlUZSG8O6Yn5Idus4dpu4M5/F2lReYRUJeMaM8u",
+      "createdAt": "2026-06-24T07:17:29.460Z"
+    },
+    {
+      "id": "bfb52f0f-413f-4dd1-ba6b-7b9e8c2f214c",
+      "name": "Test User 1",
+      "phone": "9000000001",
+      "passwordHash": "$2a$12$VHNJP8zCe8NIdgaG9JWvkuWlGUghVymavS21sc57cG7P3LXjJ7ztm",
+      "createdAt": "2026-06-24T07:18:08.179Z"
+    },
+    {
+      "id": "63d56a22-26cd-4363-ac65-3516958b2137",
+      "name": "Test User 2",
+      "phone": "9000000002",
+      "passwordHash": "$2a$12$3q6iylnISVarSp8dJZ9Le.JKuIzL9D6I86FYvYBPLh.njSAxbd8J2",
+      "createdAt": "2026-06-24T07:18:09.060Z"
+    },
+    {
+      "id": "32570419-98ef-404c-bcc0-e263f022b1c8",
+      "name": "Test User 1",
+      "phone": "9206709879",
+      "passwordHash": "$2a$12$YeXnATXVtislZTK/iGhWbONLH78x6pbS9YfCeGB4.I.QNmKgCcSJy",
+      "createdAt": "2026-06-24T07:19:28.770Z"
+    },
+    {
+      "id": "b2be81ba-effa-4c8a-9378-7c405187abd0",
+      "name": "Test User 3",
+      "phone": "9000000003",
+      "passwordHash": "$2a$12$OIqP74GrkXFSIzoc9a0uoudT9i5lt3X2hRgEq3rbpC0GBsI1QH6b.",
+      "createdAt": "2026-06-24T07:19:46.973Z"
     }
   ],
   "categories": [

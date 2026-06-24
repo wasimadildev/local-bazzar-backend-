@@ -31,7 +31,7 @@ const listingSchema = new mongoose.Schema(
     categoryName: { type: String, required: true },
     city: { type: String, required: true, trim: true, index: true },
     condition: { type: String, enum: ['new', 'used'], default: 'used' },
-    status: { type: String, enum: ['active', 'sold', 'hidden'], default: 'active', index: true },
+    status: { type: String, enum: ['available', 'reserved', 'sold', 'hidden'], default: 'available', index: true },
     images: [imageSchema],
     seller: sellerSchema
   },
